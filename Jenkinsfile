@@ -8,7 +8,7 @@ pipeline {
                 docker {
                     // L'image officielle de Playwright (contient Node, Chrome, Firefox...)
                     // On utilise 'jammy' (Ubuntu 22.04) pour la stabilité
-                    image 'mcr.microsoft.com/playwright:v1.45.0-jammy'
+                    image 'mcr.microsoft.com/playwright:v1.57.0-jammy'
                     
                     // --ipc=host est OBLIGATOIRE pour éviter que Chrome ne crashe par manque de mémoire
                     args '--ipc=host'
