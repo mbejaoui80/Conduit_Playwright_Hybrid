@@ -19,7 +19,19 @@ pipeline {
             // CORRECTION : Le bloc post doit être ICI, à l'intérieur du stage
             post {
                 always {
-                    archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+                    // On appelle le plugin Allure
+                    script {
+                        allure([
+                            includeProperties: false,
+                            jdk: '',
+                            properties: [],
+                            reportBuildPolicy: 'ALWAYS',
+                            // IMPORTANT : Doit correspondre au dossier généré par Playwright
+                            results: [[path: 'allure-results']]
+                        ])
+                    }
+                    // On garde le nettoyage pour ne pas saturer le disque
+                    cleanWs()
                 }
             }
         }

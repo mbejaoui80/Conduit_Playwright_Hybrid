@@ -22,27 +22,28 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+
+  /* --- MODIFICATION ICI --- */
+  /* On configure deux reporters :
+     1. 'html' pour tes tests locaux sur PC
+     2. 'allure-playwright' pour générer les données pour Jenkins */
+  reporter: [
+    ['html'],
+    ['allure-playwright']
+  ],
+
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL: 'https://conduit-api.bondaracademy.com/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    //trace: 'on-first-retry',
-
-    // L'URL de base de l'application
-    baseURL: 'https://conduit-api.bondaracademy.com/', 
-        
-    
-    // On capture les traces en cas d'échec (très utile pour le debug)
     trace: 'on-first-retry',
-    
-    // LA CLÉ DU SUCCÈS : 
-    // Si Jenkins lance le test, la variable "CI" existe, donc headless devient TRUE.
-    // Si c'est toi sur ton PC, "CI" n'existe pas, donc headless devient FALSE.
-    headless: !!process.env.CI,
+
+    /* --- MODIFICATION IMPORTANTE --- */
+    /* On force le mode headless à TRUE pour éviter l'erreur "Missing X Server" dans Docker.
+       Si tu veux voir le navigateur sur ton PC, lance : npx playwright test --headed */
+    headless: true,
   },
 
   /* Configure projects for major browsers */
@@ -61,33 +62,5 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });
-
