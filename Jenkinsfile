@@ -1,29 +1,26 @@
 pipeline {
-    agent none // On ne lance rien sur le maître
+    agent none 
 
     stages {
         stage('Test dans Docker') {
-            // C'est ICI que la magie opère : Jenkins va créer un conteneur pour ce stage
             agent {
                 docker {
-                    // L'image officielle de Playwright (contient Node, Chrome, Firefox...)
-                    // On utilise 'jammy' (Ubuntu 22.04) pour la stabilité
+                    // Image Playwright officielle v1.57.0
                     image 'mcr.microsoft.com/playwright:v1.57.0-jammy'
-                    
-                    // --ipc=host est OBLIGATOIRE pour éviter que Chrome ne crashe par manque de mémoire
                     args '--ipc=host'
                 }
             }
 
             steps {
-                // Vérification de où on est (pour le debug)
+                // Debug infos
                 sh 'node --version'
                 
-                // Installation des paquets (rapide car l'image a déjà les pré-requis systèmes)
+                // Installation des dépendances
                 sh 'npm ci'
                 
-                / On ajoute "CI=true" juste devant la commande pour être sûr
-                sh 'CI=true npx playwright test --workers=1'
+                // Lancement des tests
+                // Note : On ne met PAS --headless ici, car c'est géré par le config
+                sh 'npx playwright test --workers=1'
             }
         }
     }
