@@ -22,8 +22,8 @@ pipeline {
                 // Installation des paquets (rapide car l'image a déjà les pré-requis systèmes)
                 sh 'npm ci'
                 
-                // Lancement des tests
-                sh 'npx playwright test'
+                // CORRECTION : On ajoute --headless pour dire "pas d'écran"
+                sh 'npx playwright test --workers=1 --headless'
             }
         }
     }
