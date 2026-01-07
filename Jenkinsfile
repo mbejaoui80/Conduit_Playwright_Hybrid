@@ -22,8 +22,8 @@ pipeline {
                 // Installation des paquets (rapide car l'image a déjà les pré-requis systèmes)
                 sh 'npm ci'
                 
-                // CORRECTION : On retire --headless qui n'existe pas en CLI
-                sh 'npx playwright test --workers=1'
+                / On ajoute "CI=true" juste devant la commande pour être sûr
+                sh 'CI=true npx playwright test --workers=1'
             }
         }
     }

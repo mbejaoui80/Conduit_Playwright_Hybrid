@@ -39,8 +39,10 @@ export default defineConfig({
     // On capture les traces en cas d'échec (très utile pour le debug)
     trace: 'on-first-retry',
     
-    // On veut voir le navigateur (optionnel, mets false pour le mode headless plus tard)
-    headless: false, 
+    // LA CLÉ DU SUCCÈS : 
+    // Si Jenkins lance le test, la variable "CI" existe, donc headless devient TRUE.
+    // Si c'est toi sur ton PC, "CI" n'existe pas, donc headless devient FALSE.
+    headless: !!process.env.CI,
   },
 
   /* Configure projects for major browsers */
