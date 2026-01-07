@@ -5,23 +5,28 @@ pipeline {
         stage('Test dans Docker') {
             agent {
                 docker {
-                    // Image Playwright officielle v1.57.0
                     image 'mcr.microsoft.com/playwright:v1.57.0-jammy'
                     args '--ipc=host'
                 }
             }
-
             steps {
-                // Debug infos
                 sh 'node --version'
-                
-                // Installation des dépendances
                 sh 'npm ci'
-                
-                // Lancement des tests
-                // Note : On ne met PAS --headless ici, car c'est géré par le config
                 sh 'npx playwright test --workers=1'
             }
+        }
+    }
+
+    // NOUVEAU BLOC A AJOUTER ICI :
+    post {
+        always {
+            // "always" veut dire : même si les tests échouent (rouge), on veut le rapport !
+            archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+            
+            // Optionnel : Nettoyer l'espace de travail pour gagner de la place
+            cleanWs()
+
+            // Build automatique
         }
     }
 }
