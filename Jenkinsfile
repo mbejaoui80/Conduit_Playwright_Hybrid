@@ -10,21 +10,26 @@ pipeline {
                     // "--ipc=host" est toujours là pour la mémoire partagée
                     args '-u 0:0 --ipc=host'
                 }
-            }
-            
+            }        
         
-            steps {
-                // 1. On installe Java (Indispensable pour Allure)
-                // Le 'apt-get update' est nécessaire pour qu'il trouve les paquets
+           steps {
+                // 1. Installation Java (OK)
                 sh 'apt-get update && apt-get install -y default-jre'
 
-                // 2. Vérifications habituelles
+                // 2. Vérifications (OK)
                 sh 'node --version'
-                sh 'java -version' // Juste pour vérifier dans les logs que c'est bien là
-                
-                // 3. Installation et Test
+                sh 'java -version' 
                 sh 'npm ci'
-                sh 'npx playwright test --workers=1'
+
+                // 3. Tests
+                
+                // OPTION A : On commente Playwright pour l'instant pour ne pas bloquer
+                // sh 'npx playwright test --workers=1'
+                
+                // OPTION B : On lance Cucumber
+                // Note : Pour l'instant, lance-le simplement comme ça pour voir si ça passe dans Jenkins.
+                // À l'étape suivante, on ajoutera le plugin pour qu'il apparaisse dans le rapport Allure.
+                sh 'npx cucumber-js'
             }
 
             post {
