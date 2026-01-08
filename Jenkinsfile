@@ -30,9 +30,10 @@ pipeline {
                             results: [[path: 'allure-results']]
                         ])
                     }
-                    // On garde le nettoyage pour ne pas saturer le disque
+                    //  On garde le nettoyage pour ne pas saturer le disque
                     cleanWs()
                 }
+                
             }
         }
     }
