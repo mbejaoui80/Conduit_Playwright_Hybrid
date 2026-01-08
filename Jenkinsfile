@@ -6,10 +6,13 @@ pipeline {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.57.0-jammy'
-                    args '--ipc=host'
+                    // CORRECTION : On ajoute "-u 0:0" pour être root
+                    // "--ipc=host" est toujours là pour la mémoire partagée
+                    args '-u 0:0 --ipc=host'
                 }
             }
-
+            
+        
             steps {
                 // 1. On installe Java (Indispensable pour Allure)
                 // Le 'apt-get update' est nécessaire pour qu'il trouve les paquets
