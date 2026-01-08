@@ -34,6 +34,11 @@ pipeline {
 
             post {
                 always {
+                    // --- CORRECTION ICI ---
+                    // On rend les fichiers à l'utilisateur Jenkins (1000) 
+                    // pour qu'il puisse générer le rapport sans erreur "Access Denied"
+                    sh 'chown -R 1000:1000 allure-results'
+
                     script {
                         allure([
                             includeProperties: false,
