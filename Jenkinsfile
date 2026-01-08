@@ -11,29 +11,32 @@ pipeline {
             }
 
             steps {
+                // 1. On installe Java (Indispensable pour Allure)
+                // Le 'apt-get update' est nécessaire pour qu'il trouve les paquets
+                sh 'apt-get update && apt-get install -y default-jre'
+
+                // 2. Vérifications habituelles
                 sh 'node --version'
+                sh 'java -version' // Juste pour vérifier dans les logs que c'est bien là
+                
+                // 3. Installation et Test
                 sh 'npm ci'
                 sh 'npx playwright test --workers=1'
             }
 
-            // CORRECTION : Le bloc post doit être ICI, à l'intérieur du stage
             post {
                 always {
-                    // On appelle le plugin Allure
                     script {
                         allure([
                             includeProperties: false,
                             jdk: '',
                             properties: [],
                             reportBuildPolicy: 'ALWAYS',
-                            // IMPORTANT : Doit correspondre au dossier généré par Playwright
                             results: [[path: 'allure-results']]
                         ])
                     }
-                    //  On garde le nettoyage pour ne pas saturer le disque
                     cleanWs()
                 }
-                
             }
         }
     }
