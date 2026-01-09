@@ -6,6 +6,7 @@ exports.EditorPage = class EditorPage {
    * @param {import('@playwright/test').Page} page
    */
   constructor(page) {
+    
     this.page = page;
     // Les sélecteurs du formulaire
     this.titleInput = page.locator('input[placeholder="Article Title"]');
