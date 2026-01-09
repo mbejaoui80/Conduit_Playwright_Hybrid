@@ -14,3 +14,7 @@ When('I perform login with {string} and {string}', async function (email, passwo
 Then('I should see the user menu', async function () {
     await this.loginPage.verifyUserIsLoggedIn();
 });
+
+Then('I should see an error message containing {string}', async function (expectedMessage) {
+    await this.loginPage.verifyErrorMessage(expectedMessage);
+});
