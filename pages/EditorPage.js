@@ -16,6 +16,9 @@ exports.EditorPage = class EditorPage {
     
     // Le titre qui apparaît APRÈS la publication (pour vérifier)
     this.articleTitle = page.locator('h1');
+    
+    // Le bouton poubelle (on prend le premier qu'on trouve sur la page)
+    this.deleteButton = page.locator('button:has-text("Delete Article")').first();
   }
 
   // Action : Aller directement sur la page de création
@@ -36,5 +39,17 @@ exports.EditorPage = class EditorPage {
   async verifyArticleTitle(expectedTitle) {
     // CORRECTION : On ajoute un timeout de 20000ms (20 secondes)
     await expect(this.articleTitle).toHaveText(expectedTitle, { timeout: 20000 });
+  }
+
+  // Action de supprimer
+  async deleteArticle() {
+    // Sur Conduit, il faut parfois accepter une confirmation système (dialogue)
+    // Cette ligne gère automatiquement le "OUI" si une fenêtre apparaît
+    this.page.on('dialog', dialog => dialog.accept());
+
+    await this.deleteButton.click();
+    
+    // On attend d'être redirigé vers l'accueil pour être sûr que c'est fini
+    await this.page.waitForURL('**/');
   }
 };

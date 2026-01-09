@@ -29,3 +29,7 @@ Then('I should be redirected to the article page with title {string}', async fun
     // On vérifie que le titre est bien affiché
     await this.editorPage.verifyArticleTitle(expectedTitle);
 });
+
+Then('I delete the article', async function () {
+    await this.editorPage.deleteArticle();
+});
