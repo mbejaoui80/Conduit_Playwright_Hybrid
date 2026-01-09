@@ -6,10 +6,14 @@ Given('I access the home page', async function () {
     await this.homePage.goto();
 });
 
-When('I click on the tag {string}', async function (tagName) {
-    await this.homePage.clickTag(tagName);
+// Remplace les blocs existants par ceux-ci :
+
+When('I click on the first popular tag', async function () {
+    this.selectedTag = await this.homePage.clickFirstTag();
+    console.log("Tag sélectionné : " + this.selectedTag);
 });
 
-Then('the active tab should be {string}', async function (expectedTagName) {
-    await this.homePage.verifyTagIsActive(expectedTagName);
+Then('the active tab should be the selected tag', async function () {
+    await this.homePage.verifyTagIsActive(this.selectedTag);
+
 });

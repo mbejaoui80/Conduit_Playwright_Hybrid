@@ -15,12 +15,24 @@ exports.HomePage = class HomePage {
   }
 
   // Cliquer sur un tag spécifique
-  async clickTag(tagName) {
-    // On cherche le tag qui contient le texte exact et on clique
-    await this.popularTags.filter({ hasText: tagName }).first().click();
+  // Modifie ou ajoute cette méthode
+  
+  async clickFirstTag() {
+    // On attend que la liste des tags s'affiche
+    await this.popularTags.first().waitFor();
     
-    // Astuce : On attend que le réseau se calme car le clic recharge la liste des articles
+    // On récupère le texte du tout premier tag de la liste
+    const tagText = await this.popularTags.first().textContent();
+    const cleanTag = tagText.trim(); // On nettoie les espaces inutiles
+    
+    // On clique dessus
+    await this.popularTags.first().click();
+    
+    // On attend que le chargement soit fini
     await this.page.waitForLoadState('networkidle');
+    
+    // IMPORTANT : On renvoie le nom du tag pour que le test puisse s'en servir
+    return cleanTag;
   }
 
   // Vérifier que l'onglet du filtre porte bien le nom du tag
